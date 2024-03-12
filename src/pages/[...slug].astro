@@ -1,0 +1,29 @@
+---
+import { eq } from 'astro:db';
+import Layout from '../layouts/Layout.astro';
+import { Article, db } from 'astro:db';
+
+export async function getStaticPaths() {
+  const articles = await db.select().from(Article);
+  return articles.map(({ slug }) => ({
+    params: { slug },
+  }));
+}
+
+const slug = Astro.params.slug!;
+const articleData = await db
+  .select()
+  .from(Article)
+  .where(eq(Article.slug, slug));
+const article = articleData[0];
+---
+
+<Layout title={article.title}>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-4xl">{article.title}</h1>
+    <p class="text-zinc-500 font-mono text-xs">
+      Written by {article.author} on {article.publishedAt.toDateString()}
+    </p>
+  </div>
+  <div class="text-zinc-300 mt-4">{article.body}</div>
+</Layout>
