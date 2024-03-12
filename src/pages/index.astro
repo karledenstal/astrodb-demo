@@ -44,7 +44,13 @@ const articles = await db.select().from(Article);
           <p class="text-zinc-500 text-xs font-mono">
             Written by {author} on {publishedAt.toDateString()}
           </p>
-          <p class="mt-4 text-zinc-300">{summary}</p>
+          <p class="my-4 text-zinc-300">{summary}</p>
+          <a
+            href={`/api/article/delete?slug=${slug}`}
+            class="bg-red-500 p-2 min-w-24 rounded-md text-sm"
+          >
+            Delete
+          </a>
         </div>
       ))
     }
