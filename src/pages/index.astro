@@ -1,7 +1,7 @@
 ---
 import { db, Article } from 'astro:db';
 import Layout from '../layouts/Layout.astro';
-import CreateArticleForm from '../components/CreateArticleForm.astro';
+import ArticleForm from '../components/ArticleForm.astro';
 import slugify from 'slugify';
 
 if (Astro.request.method === 'POST') {
@@ -33,7 +33,7 @@ const articles = await db.select().from(Article);
 ---
 
 <Layout title="Articles">
-  <CreateArticleForm />
+  <ArticleForm />
   <div class="flex flex-col gap-4">
     {
       articles.map(({ title, author, publishedAt, summary, slug }) => (

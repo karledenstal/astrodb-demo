@@ -2,6 +2,36 @@
 import { eq } from 'astro:db';
 import Layout from '../layouts/Layout.astro';
 import { Article, db } from 'astro:db';
+import ArticleForm from '../components/ArticleForm.astro';
+import slugify from 'slugify';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  console.log('formData', formData);
+  const author = formData.get('author')!;
+  const content = formData.get('body')!;
+  const title = formData.get('title')!;
+  let slug;
+
+  if (
+    typeof author === 'string' &&
+    typeof content === 'string' &&
+    typeof title === 'string'
+  ) {  
+    
+    slug = slugify(title, { lower: true })
+    await db.update(Article).set({
+      title,
+      author,
+      body: content,
+      updatedAt: new Date(),
+      summary: content.slice(0, 100),
+      slug: slugify(title, { lower: true }),
+    });
+  }
+
+  return Astro.redirect(`/${slug}`);
+}
 
 const slug = Astro.params.slug!;
 const articleData = await db
@@ -12,11 +42,27 @@ const article = articleData[0];
 ---
 
 <Layout title={article.title}>
-  <div class="flex flex-col gap-1">
-    <h1 class="text-4xl">{article.title}</h1>
-    <p class="text-zinc-500 font-mono text-xs">
-      Written by {article.author} on {article.publishedAt.toDateString()}
-    </p>
-  </div>
-  <div class="text-zinc-300 mt-4">{article.body}</div>
+  <section x-data={`{ editMode: ${false} }`}>
+    <div x-show="editMode">
+      <ArticleForm
+        buttonLabel="Save"
+        defaultTitle={article.title}
+        defaultAuthor={article.author}
+        defaultBody={article.body}
+      />
+    </div>
+    <div x-show="!editMode" class="flex flex-col gap-1">
+      <h1 class="text-4xl">{article.title}</h1>
+      <p class="text-zinc-500 font-mono text-xs">
+        Written by {article.author} on {article.publishedAt.toDateString()}
+      </p>
+      <button
+        @click={` editMode = ${true} `}
+        class="bg-blue-500 p-2 min-w-24 rounded-md text-sm"
+      >
+        Edit
+      </button>
+    </div>
+    <div x-show="!editMode" class="text-zinc-300 mt-4">{article.body}</div>
+  </section>
 </Layout>
