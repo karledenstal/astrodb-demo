@@ -6,4 +6,18 @@ Technologies used:
 
 - Astro
 - AstroDB
-- Tailwind
+- Alpine.js
+
+The famous Triple A stack.
+
+## Getting started
+
+```bash
+bun install
+```
+
+and then run it:
+
+```bash
+bun run dev
+```
