@@ -1,0 +1,28 @@
+<form method="POST" class="flex flex-col space-y-4 mb-10">
+  <label class="flex flex-col space-y-2">
+    <strong class="font-semibold">Title</strong>
+    <input
+      class="rounded-sm bg-zinc-900 border border-zinc-800 p-2 text-zinc-300"
+      name="title"
+    />
+  </label>
+  <label class="flex flex-col space-y-2">
+    <strong>Author</strong>
+    <input
+      class="rounded-sm bg-zinc-900 border border-zinc-800 p-2 text-zinc-300"
+      name="author"
+    />
+  </label>
+  <label class="flex flex-col space-y-2">
+    <strong>Body</strong>
+    <textarea
+      class="rounded-sm bg-zinc-900 border border-zinc-800 p-2 text-zinc-300"
+      name="body"
+      rows={5}></textarea>
+  </label>
+  <button
+    type="submit"
+    class="rounded-sm bg-zinc-900 border border-zinc-800 p-2 text-zinc-300"
+    >Create</button
+  >
+</form>

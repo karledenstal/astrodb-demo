@@ -3,13 +3,6 @@ import { eq } from 'astro:db';
 import Layout from '../layouts/Layout.astro';
 import { Article, db } from 'astro:db';
 
-export async function getStaticPaths() {
-  const articles = await db.select().from(Article);
-  return articles.map(({ slug }) => ({
-    params: { slug },
-  }));
-}
-
 const slug = Astro.params.slug!;
 const articleData = await db
   .select()

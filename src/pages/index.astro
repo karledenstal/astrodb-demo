@@ -1,16 +1,46 @@
 ---
 import { db, Article } from 'astro:db';
 import Layout from '../layouts/Layout.astro';
+import CreateArticleForm from '../components/CreateArticleForm.astro';
+import slugify from 'slugify';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  console.log('formData', formData);
+  const author = formData.get('author');
+  const content = formData.get('body');
+  const title = formData.get('title');
+
+  if (
+    typeof author === 'string' &&
+    typeof content === 'string' &&
+    typeof title === 'string'
+  ) {
+    // insert form data into the Comment table
+    await db.insert(Article).values({
+      title,
+      author,
+      body: content,
+      publishedAt: new Date(),
+      updatedAt: new Date(),
+      summary: content.slice(0, 100),
+      slug: slugify(title, { lower: true }),
+    });
+  }
+}
 
 const articles = await db.select().from(Article);
 ---
 
 <Layout title="Articles">
+  <CreateArticleForm />
   <div class="flex flex-col gap-4">
     {
       articles.map(({ title, author, publishedAt, summary, slug }) => (
         <div class="border border-zinc-800 rounded-md p-4">
-          <h2 class="font-semibold text-2xl"><a href={`/${slug}`}>{title}</a></h2>
+          <h2 class="font-semibold text-2xl">
+            <a href={`/${slug}`}>{title}</a>
+          </h2>
           <p class="text-zinc-500 text-xs font-mono">
             Written by {author} on {publishedAt.toDateString()}
           </p>
