@@ -7,4 +7,3 @@ Technologies used:
 - Astro
 - AstroDB
 - Tailwind
-- React
